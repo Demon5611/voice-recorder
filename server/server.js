@@ -3,14 +3,19 @@ const multer = require("multer");
 const cors = require("cors");
 
 const app = express();
-const PORT = 5000;
+const PORT = 5001;
 
 // Разрешить CORS
 app.use(cors());
 
+const fs = require("fs");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    const dir = "upload/";
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir); // Создает папку, если она отсутствует
+    }
+    cb(null, dir);
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
